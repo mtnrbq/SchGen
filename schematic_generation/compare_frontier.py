@@ -9,6 +9,8 @@ Usage (repo root, PROJECT_PATH and OPENROUTER_API_KEY set):
   python schematic_generation/compare_frontier.py --models anthropic/claude-opus-5.5 ...
 Local server (reuses the saved prompts.json, so no OpenRouter key is needed):
   python schematic_generation/compare_frontier.py --base_url http://127.0.0.1:8080/v1 --models <model id>
+Fully local, with symbols picked by the search-tool selector (modules/symbol_search.py):
+  python schematic_generation/compare_frontier.py --out_dir runs/local --base_url http://127.0.0.1:8080/v1       --selector_model <model id> --selector_base_url http://127.0.0.1:8080/v1 --models <model id>
 """
 import argparse, json, os, re, sys, time
 from pathlib import Path
@@ -19,6 +21,7 @@ sys.path.append(project_path)
 import openai
 from config import prepare_context
 from modules.symbol_context import load_related_symbols, describe_symbol_info
+from modules.symbol_search import select_symbols_with_tools
 
 RAW_CASES = {
     "usb_b": "I would like to add a USB_B connector interface in the schematic, exporting two labels, namely D+ and D-. Make the schematic as simple as possible.",
@@ -48,10 +51,11 @@ class OpenRouterSelector:
         raise RuntimeError("symbol selection failed")
 
 
-def raw_messages(prompt: str):
-    # Mirrors run_raw_test() in generate.py.
-    symbols = load_related_symbols(llm=OpenRouterSelector(), sch_request=prompt,
-                                   organized_lib_path="./export/organized_lib.json")
+def raw_messages(prompt: str, selector=None):
+    # Mirrors run_raw_test() in generate.py. selector(prompt) -> symbols replaces GPT-5.2 selection.
+    symbols = (selector(prompt) if selector else
+               load_related_symbols(llm=OpenRouterSelector(), sch_request=prompt,
+                                    organized_lib_path="./export/organized_lib.json"))
     symbol_context = describe_symbol_info(symbols)
     msgs = prepare_context()
     msgs.append({"role": "user", "content": f"""
@@ -84,8 +88,20 @@ def main():
     ap.add_argument("--extra_body", default="{}",
                     help='JSON merged into each request, e.g. \'{"chat_template_kwargs": {"enable_thinking": false}}\'')
     ap.add_argument("--tag", default="", help="suffix for output names, to keep variants apart")
+    ap.add_argument("--selector_model", default=None,
+                    help="pick symbols with the search-tool selector and this model instead of GPT-5.2 "
+                         "(use a new --out_dir, since prompts.json is reused when present)")
+    ap.add_argument("--selector_base_url", default=None, help="server for --selector_model (default: OpenRouter)")
+    ap.add_argument("--selector_extra_body", default='{"chat_template_kwargs": {"enable_thinking": false}}',
+                    help="JSON merged into selector requests")
     args = ap.parse_args()
     extra_body = json.loads(args.extra_body)
+    selector = None
+    if args.selector_model:
+        sel_client = (openai.OpenAI(base_url=args.selector_base_url, api_key="local", timeout=600)
+                      if args.selector_base_url else client)
+        sel_extra = json.loads(args.selector_extra_body)
+        selector = lambda p: select_symbols_with_tools(sel_client, args.selector_model, p, extra_body=sel_extra)
     gen_client = (openai.OpenAI(base_url=args.base_url, api_key="local", timeout=1800)
                   if args.base_url else client)
     out = Path(args.out_dir); out.mkdir(parents=True, exist_ok=True)
@@ -98,7 +114,7 @@ def main():
         cases = {}
         for name, prompt in RAW_CASES.items():
             print(f"building prompt {name}")
-            cases[name] = raw_messages(prompt)
+            cases[name] = raw_messages(prompt, selector)
         rows = [json.loads(l) for l in open(args.dataset, encoding="utf-8")]
         for i in DATASET_ROWS:
             cases[f"ds{i}"] = rows[i]["messages"][:2]
