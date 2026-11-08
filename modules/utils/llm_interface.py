@@ -812,6 +812,10 @@ class OpenRouterLLMInterface(LLMInterface):
             self.model_url = "openai/gpt-5.1"
         elif self.model_name == "grok-4":
             self.model_url = "x-ai/grok-4"
+        elif self.model_name == "gpt-5.2":
+            self.model_url = "openai/gpt-5.2"
+        elif self.model_name == "gpt-4o":
+            self.model_url = "openai/gpt-4o"
         else:
             assert False, "Unsupported model name for OpenRouter LLM Interface"
 
@@ -1006,7 +1010,7 @@ def GetLLMInterface(model_name="gpt-4o", model_provider="Azure"):
         assert False, "Unsupported model provider for Generic LLM Interface"
 
 # Used as back up for json structured output
-LOCAL_HELPER = GetLLMInterface(model_name="gpt-4o", model_provider="Azure")
+LOCAL_HELPER = GetLLMInterface(model_name="gpt-4o", model_provider="OpenRouter")
 
 ## Testing the OpenAI LLM interface ##
 class Step(BaseModel):

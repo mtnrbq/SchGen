@@ -16,13 +16,13 @@ openrouter_api_key = ""
 
 if system == "Windows":
     JAVA_EXE = "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.9.10-hotspot\\bin\\java.exe"
-    KiCAD_DIR = "C:\\Program Files\\KiCad\\8.0\\share\\kicad"
+    KiCAD_DIR = "C:\\Users\\rmaws\\AppData\\Local\\Programs\\KiCad\\8.0\\share\\kicad"
     freerouting_jar_path = f"C:\\Users\\{user_name}\\Documents\\KiCad\\8.0\\3rdparty\\plugins\\app_freerouting_kicad-plugin\\jar\\freerouting-2.1.0.jar"
     freerouting_plugin_path = f"C:\\Users\\{user_name}\\Documents\\KiCad\\8.0\\3rdparty\\plugins\\app_freerouting_kicad-plugin\\plugin.py"
     KICAD_SYMBOL_LIB_PATH = os.path.join(KiCAD_DIR, "symbols")
     KICAD_FOOTPRINT_LIB_PATH = os.path.join(KiCAD_DIR, "footprints")
-    pcbnew_path = "C:\\Program Files\\KiCad\\8.0\\bin\\python.exe"
-    python_path = "C:\\Program Files\\KiCad\\8.0\\bin\\python.exe"
+    pcbnew_path = "C:\\Users\\rmaws\\AppData\\Local\\Programs\\KiCad\\8.0\\bin\\python.exe"
+    python_path = "C:\\Users\\rmaws\\AppData\\Local\\Programs\\KiCad\\8.0\\bin\\python.exe"
 
 elif system == "Darwin":  # macOS
     JAVA_EXE = "/usr/bin/Java"

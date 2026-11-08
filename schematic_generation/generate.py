@@ -64,7 +64,7 @@ base_model = AutoModelForCausalLM.from_pretrained("openai/gpt-oss-20b", **model_
 
 # Model will be loaded after parsing CLI arguments
 
-symbol_selector_llm = GetLLMInterface(model_name="gpt-5.2", model_provider="Azure")
+symbol_selector_llm = GetLLMInterface(model_name="gpt-5.2", model_provider="OpenRouter")
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description="Test model inference with raw request or dataset sample.")
