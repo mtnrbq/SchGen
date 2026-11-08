@@ -260,10 +260,9 @@ def load_related_symbols(llm, sch_request: str, img_ref_path: str = None, img_re
 
     filtered_libs = []
     for sym in data_obj.symbols:
-        for lib_name, sym_list in sym_lib_dict.items():
-            if any(sym_info.get("name") == sym for sym_info in sym_list):
-                filtered_libs.append(lib_name)
-                break
+        # The LLM returns library names; keep those that exist in the scan.
+        if sym in sym_lib_dict and sym not in filtered_libs:
+            filtered_libs.append(sym)
 
     if "Device" not in filtered_libs:
         filtered_libs.append("Device")

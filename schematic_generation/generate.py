@@ -142,7 +142,7 @@ def main(argv=None):
     # Test with trained model
     output_ids = model.generate(
         input_ids,
-        max_new_tokens=MAX_TOKENS,
+        max_new_tokens=MAX_TOKENS, use_cache=True,
         attention_mask=torch.ones_like(input_ids),
     )
 
