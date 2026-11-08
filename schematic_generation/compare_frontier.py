@@ -7,6 +7,8 @@ saves each model's code as <out_dir>/generated_<model>_<case>.py.
 
 Usage (repo root, PROJECT_PATH and OPENROUTER_API_KEY set):
   python schematic_generation/compare_frontier.py --models anthropic/claude-opus-5.5 ...
+Local server (reuses the saved prompts.json, so no OpenRouter key is needed):
+  python schematic_generation/compare_frontier.py --base_url http://127.0.0.1:8080/v1 --models <model id>
 """
 import argparse, json, os, re, sys, time
 from pathlib import Path
@@ -75,7 +77,17 @@ def main():
     ap.add_argument("--dataset", default="SchGen_dataset.jsonl")
     ap.add_argument("--out_dir", default="runs_2026-11-08/frontier")
     ap.add_argument("--max_tokens", type=int, default=32000)
+    ap.add_argument("--base_url", default=None,
+                    help="OpenAI-compatible server for the models under test, e.g. "
+                         "http://127.0.0.1:8080/v1 (default: OpenRouter). Prompt building "
+                         "and symbol selection still use OpenRouter.")
+    ap.add_argument("--extra_body", default="{}",
+                    help='JSON merged into each request, e.g. \'{"chat_template_kwargs": {"enable_thinking": false}}\'')
+    ap.add_argument("--tag", default="", help="suffix for output names, to keep variants apart")
     args = ap.parse_args()
+    extra_body = json.loads(args.extra_body)
+    gen_client = (openai.OpenAI(base_url=args.base_url, api_key="local", timeout=1800)
+                  if args.base_url else client)
     out = Path(args.out_dir); out.mkdir(parents=True, exist_ok=True)
 
     # Build every prompt once so all models get identical input.
@@ -94,23 +106,23 @@ def main():
 
     usage = []
     for model in args.models:
-        tag = model.split("/")[-1]
+        tag = model.split("/")[-1] + (f"-{args.tag}" if args.tag else "")
         for name, msgs in cases.items():
             dst = out / f"generated_{tag}_{name}.py"
             if dst.exists():
                 print(f"skip {dst.name}"); continue
             t0 = time.time()
             try:
-                r = client.chat.completions.create(model=model, messages=msgs,
+                r = gen_client.chat.completions.create(model=model, messages=msgs,
                                                    max_tokens=args.max_tokens,
-                                                   extra_body={"usage": {"include": True}})
+                                                   extra_body={"usage": {"include": True}, **extra_body})
             except Exception as e:
                 print(f"{tag} {name}: ERROR {type(e).__name__}: {str(e)[:200]}"); continue
             text = r.choices[0].message.content or ""
             dst.write_text(extract_code(text), encoding="utf-8")
             (out / f"raw_{tag}_{name}.txt").write_text(text, encoding="utf-8")
             u = r.usage
-            usage.append({"model": model, "case": name, "secs": round(time.time() - t0),
+            usage.append({"model": tag, "case": name, "secs": round(time.time() - t0),
                           "in": u.prompt_tokens, "out": u.completion_tokens,
                           "cost": getattr(u, "cost", None)})
             print(usage[-1])
