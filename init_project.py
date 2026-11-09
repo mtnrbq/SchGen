@@ -54,7 +54,6 @@ def make_kicad_sch() -> str:
             (page "1")
         )
     )
-    (symbol_instances)
 )
 '''
 

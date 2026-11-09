@@ -59,7 +59,7 @@ export
 **/__pycache__/
 **/*.pyc
 wandb/
-runs/
+runs*/
 outputs/
 *.ckpt
 

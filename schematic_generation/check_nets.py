@@ -40,7 +40,10 @@ def find_sources(gen_dirs):
             m = re.fullmatch(r"(?:(.+)_)?(ds\d+|" + "|".join(RAW_CASES) + ")", stem)
             if not m:
                 continue
-            yield (m.group(1) or d.name), m.group(2), f.read_text(encoding="utf-8")
+            tag = m.group(1) or d.name
+            if m.group(1) and len(gen_dirs) > 1:
+                tag = f"{d.name}/{tag}"  # the same model can appear in several folders
+            yield tag, m.group(2), f.read_text(encoding="utf-8")
 
 
 def build(work, cli, tag, case, code):

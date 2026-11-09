@@ -1,0 +1,121 @@
+(kicad_sch (version 20231120) (generator "eeschema") (generator_version "8.0") (uuid "00000000-0000-0000-0000-000000000000") (paper "A4") (lib_symbols 
+
+(symbol "Connector:USB_B" (pin_names (offset 1.016)) (exclude_from_sim no) (in_bom yes) (on_board yes) 
+
+(property "Reference" "J" (at -5.08 11.43 0) (effects (font (size 1.27 1.27)) (justify left))) 
+
+(property "Value" "USB_B" (at -5.08 8.89 0) (effects (font (size 1.27 1.27)) (justify left))) 
+
+(property "Footprint" "" (at 3.81 -1.27 0) (effects (font (size 1.27 1.27)) (hide yes))) 
+
+(property "Datasheet" "~" (at 3.81 -1.27 0) (effects (font (size 1.27 1.27)) (hide yes))) 
+
+(property "Description" "USB Type B connector" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes))) 
+
+(property "ki_keywords" "connector USB" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes))) 
+
+(property "ki_fp_filters" "USB*" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes))) 
+
+(symbol "USB_B_0_1" 
+
+(rectangle (start -5.08 -7.62) (end 5.08 7.62) (stroke (width 0.254) (type default)) (fill (type background))) (circle (center -3.81 2.159) (radius 0.635) (stroke (width 0.254) (type default)) (fill (type outline))) 
+
+(rectangle (start -3.81 5.588) (end -2.54 4.572) (stroke (width 0) (type default)) (fill (type outline))) (circle (center -0.635 3.429) (radius 0.381) (stroke (width 0.254) (type default)) (fill (type outline))) 
+
+(rectangle (start -0.127 -7.62) (end 0.127 -6.858) (stroke (width 0) (type default)) (fill (type none))) 
+
+(polyline (pts 
+
+(xy -1.905 2.159) 
+
+(xy 0.635 2.159)) (stroke (width 0.254) (type default)) (fill (type none))) 
+
+(polyline (pts 
+
+(xy -3.175 2.159) 
+
+(xy -2.54 2.159) 
+
+(xy -1.27 3.429) 
+
+(xy -0.635 3.429)) (stroke (width 0.254) (type default)) (fill (type none))) 
+
+(polyline (pts 
+
+(xy -2.54 2.159) 
+
+(xy -1.905 2.159) 
+
+(xy -1.27 0.889) 
+
+(xy 0 0.889)) (stroke (width 0.254) (type default)) (fill (type none))) 
+
+(polyline (pts 
+
+(xy 0.635 2.794) 
+
+(xy 0.635 1.524) 
+
+(xy 1.905 2.159) 
+
+(xy 0.635 2.794)) (stroke (width 0.254) (type default)) (fill (type outline))) 
+
+(polyline (pts 
+
+(xy -4.064 4.318) 
+
+(xy -2.286 4.318) 
+
+(xy -2.286 5.715) 
+
+(xy -2.667 6.096) 
+
+(xy -3.683 6.096) 
+
+(xy -4.064 5.715) 
+
+(xy -4.064 4.318)) (stroke (width 0) (type default)) (fill (type none))) 
+
+(rectangle (start 0.254 1.27) (end -0.508 0.508) (stroke (width 0.254) (type default)) (fill (type outline))) 
+
+(rectangle (start 5.08 -2.667) (end 4.318 -2.413) (stroke (width 0) (type default)) (fill (type none))) 
+
+(rectangle (start 5.08 -0.127) (end 4.318 0.127) (stroke (width 0) (type default)) (fill (type none))) 
+
+(rectangle (start 5.08 4.953) (end 4.318 5.207) (stroke (width 0) (type default)) (fill (type none)))) 
+
+(symbol "USB_B_1_1" (pin power_out line (at 7.62 5.08 180) (length 2.54) (name "VBUS" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27))))) (pin bidirectional line (at 7.62 -2.54 180) (length 2.54) (name "D-" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27))))) (pin bidirectional line (at 7.62 0 180) (length 2.54) (name "D+" (effects (font (size 1.27 1.27)))) (number "3" (effects (font (size 1.27 1.27))))) (pin power_out line (at 0 -10.16 90) (length 2.54) (name "GND" (effects (font (size 1.27 1.27)))) (number "4" (effects (font (size 1.27 1.27))))) (pin passive line (at -2.54 -10.16 90) (length 2.54) (name "Shield" (effects (font (size 1.27 1.27)))) (number "5" (effects (font (size 1.27 1.27)))))))) 
+
+(symbol (lib_id "Connector:USB_B") (at 149.86 100.33 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced yes) (uuid 59afca5e-a166-40ef-b01b-9cb4eb5f3533) 
+
+(property "Reference" "USB1" (at 144.78 111.76 0) (effects (font (size 1.27 1.27)))) 
+
+(property Value "USB_B" (at 144.78 109.22 0) (effects (font (size 1.27 1.27)))) 
+
+(property "Footprint" "Connector_PCBEdge:BUS_AT" (at 3.81 -1.27 0) (effects (font (size 1.27 1.27)) (hide yes))) 
+
+(property "Datasheet" "~" (at 3.81 -1.27 0) (effects (font (size 1.27 1.27)) (hide yes))) 
+
+(property "Description" "USB Type B connector" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes))) (pin "1" (uuid 745e6b35-f59d-4668-8fe1-7ce9e952e86c)) (pin "2" (uuid 2493e7d4-9911-4e81-bb0d-15a780cc3f05)) (pin "3" (uuid 81360f24-161a-4235-8e53-9ca89e880a8c)) (pin "4" (uuid c22d9ab8-9fe0-4e06-8395-f6e5cd7c969d)) (pin "5" (uuid e1de5b91-c613-4f26-8496-34e635af78a0)) (instances (project "D:\\SchGen\\usb_b_test\\usb_b_test" (path "/00000000-0000-0000-0000-000000000000" (reference "USB1") (unit 1))))) 
+
+(wire (pts 
+
+(xy 144.78 100.33) 
+
+(xy 157.48 100.33)) (stroke (width 0.25) (type default)) (uuid 04a25dbd-e07a-48a2-a34c-3a9d44e7007f)) 
+
+(wire (pts 
+
+(xy 144.78 102.87) 
+
+(xy 157.48 102.87)) (stroke (width 0.25) (type default)) (uuid cec646c4-7ec6-4773-a49d-6d94b7642ff7)) (sheet_instances (path "/" (page "1"))) 
+
+(symbol_instances) 
+
+(global_label "D+" (shape input) (at 144.78 100.33 180) (fields_autoplaced) (effects (font (size 1.27 1.27)) (justify right)) (uuid 7337acc2-d7cd-4385-9db6-ab6ae3e6bba2) 
+
+(property "Intersheetrefs" "${INTERSHEET_REFS}" (at 138.5291 100.33 0) (effects (font (size 1.27 1.27)) (justify right) hide))) 
+
+(global_label "D-" (shape input) (at 144.78 102.87 180) (fields_autoplaced) (effects (font (size 1.27 1.27)) (justify right)) (uuid a68932d7-45e1-41db-941a-f8d3f610a986) 
+
+(property "Intersheetrefs" "${INTERSHEET_REFS}" (at 138.5291 102.87 0) (effects (font (size 1.27 1.27)) (justify right) hide))))
