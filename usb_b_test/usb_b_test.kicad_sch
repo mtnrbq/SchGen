@@ -86,7 +86,7 @@
 
 (symbol "USB_B_1_1" (pin power_out line (at 7.62 5.08 180) (length 2.54) (name "VBUS" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27))))) (pin bidirectional line (at 7.62 -2.54 180) (length 2.54) (name "D-" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27))))) (pin bidirectional line (at 7.62 0 180) (length 2.54) (name "D+" (effects (font (size 1.27 1.27)))) (number "3" (effects (font (size 1.27 1.27))))) (pin power_out line (at 0 -10.16 90) (length 2.54) (name "GND" (effects (font (size 1.27 1.27)))) (number "4" (effects (font (size 1.27 1.27))))) (pin passive line (at -2.54 -10.16 90) (length 2.54) (name "Shield" (effects (font (size 1.27 1.27)))) (number "5" (effects (font (size 1.27 1.27)))))))) 
 
-(symbol (lib_id "Connector:USB_B") (at 149.86 100.33 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced yes) (uuid 59afca5e-a166-40ef-b01b-9cb4eb5f3533) 
+(symbol (lib_id "Connector:USB_B") (at 149.86 100.33 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced yes) (uuid 94fc7104-155c-432e-abf5-a79b2582995c) 
 
 (property "Reference" "USB1" (at 144.78 111.76 0) (effects (font (size 1.27 1.27)))) 
 
@@ -96,26 +96,24 @@
 
 (property "Datasheet" "~" (at 3.81 -1.27 0) (effects (font (size 1.27 1.27)) (hide yes))) 
 
-(property "Description" "USB Type B connector" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes))) (pin "1" (uuid 745e6b35-f59d-4668-8fe1-7ce9e952e86c)) (pin "2" (uuid 2493e7d4-9911-4e81-bb0d-15a780cc3f05)) (pin "3" (uuid 81360f24-161a-4235-8e53-9ca89e880a8c)) (pin "4" (uuid c22d9ab8-9fe0-4e06-8395-f6e5cd7c969d)) (pin "5" (uuid e1de5b91-c613-4f26-8496-34e635af78a0)) (instances (project "D:\\SchGen\\usb_b_test\\usb_b_test" (path "/00000000-0000-0000-0000-000000000000" (reference "USB1") (unit 1))))) 
+(property "Description" "USB Type B connector" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes))) (pin "1" (uuid 1e0a54af-afbd-4207-93f6-30739fbfd975)) (pin "2" (uuid 694a0092-0ec1-4b0d-a687-d254984872d2)) (pin "3" (uuid c4b9b136-70ad-4d12-bd63-2deeae6dfb2a)) (pin "4" (uuid a6772c17-bf7b-4af0-bda1-ff88d6480e2e)) (pin "5" (uuid 8555d1a8-95a4-49ea-85ef-9fba89424d14)) (instances (project "D:\\SchGen\\usb_b_test\\usb_b_test" (path "/00000000-0000-0000-0000-000000000000" (reference "USB1") (unit 1))))) 
 
 (wire (pts 
 
 (xy 144.78 100.33) 
 
-(xy 157.48 100.33)) (stroke (width 0.25) (type default)) (uuid 04a25dbd-e07a-48a2-a34c-3a9d44e7007f)) 
+(xy 157.48 100.33)) (stroke (width 0.25) (type default)) (uuid 69bdbd52-c247-4d84-bcf5-d3c4fc0be814)) 
 
 (wire (pts 
 
 (xy 144.78 102.87) 
 
-(xy 157.48 102.87)) (stroke (width 0.25) (type default)) (uuid cec646c4-7ec6-4773-a49d-6d94b7642ff7)) (sheet_instances (path "/" (page "1"))) 
+(xy 157.48 102.87)) (stroke (width 0.25) (type default)) (uuid 64ef3014-6427-469f-83be-d21ee83d55fa)) (sheet_instances (path "/" (page "1"))) 
 
-(symbol_instances) 
-
-(global_label "D+" (shape input) (at 144.78 100.33 180) (fields_autoplaced) (effects (font (size 1.27 1.27)) (justify right)) (uuid 7337acc2-d7cd-4385-9db6-ab6ae3e6bba2) 
+(global_label "D+" (shape input) (at 144.78 100.33 180) (fields_autoplaced) (effects (font (size 1.27 1.27)) (justify right)) (uuid d9b9548a-8fa3-4a3f-84de-059a0635f4c2) 
 
 (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 138.5291 100.33 0) (effects (font (size 1.27 1.27)) (justify right) hide))) 
 
-(global_label "D-" (shape input) (at 144.78 102.87 180) (fields_autoplaced) (effects (font (size 1.27 1.27)) (justify right)) (uuid a68932d7-45e1-41db-941a-f8d3f610a986) 
+(global_label "D-" (shape input) (at 144.78 102.87 180) (fields_autoplaced) (effects (font (size 1.27 1.27)) (justify right)) (uuid f806ed4d-114a-4b04-aadc-fe16d6ea8ec9) 
 
 (property "Intersheetrefs" "${INTERSHEET_REFS}" (at 138.5291 102.87 0) (effects (font (size 1.27 1.27)) (justify right) hide))))

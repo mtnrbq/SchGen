@@ -219,6 +219,56 @@ def _resolve_symbol_lib(symbol_name: str) -> Optional[str]:
         _SYMBOL_TO_LIB_CACHE = _build_symbol_to_lib_index()
     return _SYMBOL_TO_LIB_CACHE.get(symbol_name)
 
+# Strict mode (SCHGEN_STRICT_SYMBOLS=1): an unknown symbol or pin raises an error naming
+# the closest real ones, instead of silently using whatever is spelled most alike
+# (which turned a made-up "Connector:SJ" into a diode, and pin "SDA" into "VDD").
+STRICT_SYMBOLS = os.environ.get("SCHGEN_STRICT_SYMBOLS") == "1"
+_LIB_TO_SYMBOLS_CACHE: Optional[Dict[str, List[str]]] = None
+
+
+def _lib_to_symbols() -> Dict[str, List[str]]:
+    global _LIB_TO_SYMBOLS_CACHE
+    if _LIB_TO_SYMBOLS_CACHE is None:
+        data = json.loads((Path(project_path) / "modules" / "component_repository.json").read_text(encoding="utf-8"))
+        out: Dict[str, List[str]] = {}
+        for lvl2 in data.values():
+            for lib_dict in (lvl2.values() if isinstance(lvl2, dict) else []):
+                for lib, names in (lib_dict.items() if isinstance(lib_dict, dict) else []):
+                    out.setdefault(lib, []).extend(n for n in names if isinstance(n, str))
+        _LIB_TO_SYMBOLS_CACHE = out
+    return _LIB_TO_SYMBOLS_CACHE
+
+
+def resolve_symbol_strict(symbol_lib: str, symbol_name: str):
+    """Return (lib, name) for a real symbol, allowing only safe corrections; else raise."""
+    libs = _lib_to_symbols()
+    names = libs.get(symbol_lib, [])
+    if symbol_name in names:
+        return symbol_lib, symbol_name
+    # Right symbol, wrong library guess.
+    lib = _resolve_symbol_lib(symbol_name)
+    if lib is not None:
+        return lib, symbol_name
+    # Case, spacing, dash and underscore differences only.
+    qn = _normalize_sym(symbol_name)
+    for n in names:
+        if _normalize_sym(n) == qn:
+            return symbol_lib, n
+    for l, ns in libs.items():
+        for n in ns:
+            if _normalize_sym(n) == qn:
+                return l, n
+    # A near-identical spelling inside the requested library (e.g. R_Smal -> R_Small).
+    if names:
+        best = max(names, key=lambda n: _score(qn, _normalize_sym(n)))
+        if _score(qn, _normalize_sym(best)) >= 0.9:
+            return symbol_lib, best
+    ranked = sorted(((l, n) for l, ns in libs.items() for n in ns),
+                    key=lambda ln: -_score(qn, _normalize_sym(ln[1])))[:5]
+    raise ValueError(f"Symbol {symbol_lib}:{symbol_name} does not exist. Closest names: "
+                     f"{[f'{l}:{n}' for l, n in ranked]}. Search for the right symbol instead of guessing.")
+
+
 def set_schematic_filename(filename: str = None):
     """
     Set the schematic filename to be used in the module.
@@ -281,6 +331,9 @@ def add_schematic_symbol(symbol_lib="RF_Module", symbol_name="ESP-WROOM-02", pos
             raise ValueError(f"Invalid mirror direction: {mirror}. Must be 'x' or 'y'.")
     else:
         mirror_val = None
+
+    if STRICT_SYMBOLS:
+        symbol_lib, symbol_name = resolve_symbol_strict(symbol_lib, symbol_name)
 
     # --- resolve symbol_name from component_repository.json (more robust) ---
     symbol_name = best_symbol_name_from_lib_tree(symbol_name=symbol_name, project_path=project_path) or symbol_name
@@ -858,6 +911,9 @@ def get_pin_location(symbol_ref: str, pin_name: str):
             if p.number == pin_name or p.name == pin_name:
                 pin_instance = p
         if pin_instance is None:
+            if STRICT_SYMBOLS:
+                raise ValueError(f"Pin {pin_name} not found in symbol {symbol_ref}. Available pins: "
+                                 f"{[f'{q.number}={q.name}' for q in symbol.pin]}")
             print(f"Warning: Pin {pin_name} not found in symbol {symbol_ref} by number or name. Trying to find the best match.")
             pin_instance = find_best_pin_instance(symbol, pin_name)
     elif pin_name in symbol.pin:
@@ -877,6 +933,9 @@ def get_pin_location(symbol_ref: str, pin_name: str):
                 pin_instance = p
                 break
         if pin_instance is None:
+            if STRICT_SYMBOLS:
+                raise ValueError(f"Pin {pin_name} not found in symbol {symbol_ref}. Available pins: "
+                                 f"{[f'{q.number}={q.name}' for q in symbol.pin]}")
             pin_instance = find_best_pin_instance(symbol, pin_name)
 
     if pin_instance is None:

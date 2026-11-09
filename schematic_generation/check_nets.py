@@ -32,6 +32,17 @@ def default_cli():
     return str(Path(pcbnew_path).parent / ("kicad-cli.exe" if os.name == "nt" else "kicad-cli"))
 
 
+def ensure_work_dir(work: Path):
+    """Create a build folder. The footprint step reads export/organized_fp.json relative to it."""
+    work.mkdir(parents=True, exist_ok=True)
+    if not (work / "export").exists():
+        if os.name == "nt":
+            subprocess.run(["cmd", "/c", "mklink", "/J", str(work / "export"), str(REPO / "export")],
+                           check=True, capture_output=True)
+        else:
+            (work / "export").symlink_to(REPO / "export", target_is_directory=True)
+
+
 def find_sources(gen_dirs):
     """Yield (tag, case, code) for every generated_*.py in the given folders."""
     for d in map(Path, gen_dirs):
@@ -112,14 +123,7 @@ def main():
     args = ap.parse_args()
     cli = args.kicad_cli or default_cli()
     work = Path(args.work_dir).resolve()
-    work.mkdir(parents=True, exist_ok=True)
-    # The footprint step reads export/organized_fp.json relative to the working directory.
-    if not (work / "export").exists():
-        if os.name == "nt":
-            subprocess.run(["cmd", "/c", "mklink", "/J", str(work / "export"), str(REPO / "export")],
-                           check=True, capture_output=True)
-        else:
-            (work / "export").symlink_to(REPO / "export", target_is_directory=True)
+    ensure_work_dir(work)
 
     results = {}
     if args.ref_dir:
